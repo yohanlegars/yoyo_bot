@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="https://www.ros.org/wiki/xacro">
 
+<!-- COLOR PARAMETERS-->
+
 <material name="white">
     <color rgba="1 1 1 1"/>
 </material>
@@ -17,23 +19,58 @@
     <color rgba="0 0 0 1"/>
 </material>
 
+<!--PROPERTIES-->
+<xacro:property name="caster_wheel_radius" value="0.05"/>
+<xacro:property name="caster_wheel_origin_xyz" value="0.24 0 0"/>
+<xacro:property name="caster_wheel_origin_rpy" value="0 0 0"/>
+
+<xacro:property name="left_wheel_radius" value="0.05"/>
+<xacro:property name="left_wheel_length" value="0.05"/>
+<xacro:property name="left_wheel_origin_xyz" value="0 -0.175 0"/>
+<xacro:property name="left_wheel_origin_rpy" value="-${pi/2} 0 0"/>
+
+<xacro:property name="right_wheel_radius" value="0.05"/>
+<xacro:property name="right_wheel_length" value="0.05"/>
+<xacro:property name="right_wheel_origin_xyz" value="0 -0.175 0"/>
+<xacro:property name="right_wheel_origin_rpy" value="${pi/2} 0 0"/>
+
+<xacro:property name="chassis_origin_xyz" value="0.15 0 0.075"/>
+<xacro:property name="chassis_origin_rpy" value="0 0 0"/>
+<xacro:property name="chassis_joint_origin_xyz" value="-0.1 0 0"/>
+
+
+
+
+
+
+
 <link name="base_link">
 </link>
+
 <!-- CHASSIS-->
 <joint name="chassis_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="chassis"/>
+    <child link="chassis"/> 
     <origin xyz="-0.1 0 0"/>
 </joint>
 
 <link name="chassis">
-    <visual>
+    <visual> 
         <origin xyz="0.15 0 0.075" rpy="0 0 0"/>
         <geometry>
             <box size="0.3 0.3 0.15"/>
         </geometry>
+
         <material name="white"/>
     </visual>
+
+    <collision>
+        <origin xyz="0.15 0 0.075" rpy="0 0 0"/> 
+        <geometry>
+            <box size="0.3 0.3 0.15"/>
+        </geometry>
+
+    </collision>
 </link>
 
 <!-- LEFT WHEEL-->
@@ -41,24 +78,31 @@
 <joint name="left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel"/>
+    
     <origin xyz="0 0.175 0" rpy="-${pi/2} 0 0"/>
     <axis xyz="0 0 1"/>
 </joint>
 
 <link name="left_wheel">
     <visual>
-        <geometry>
+        <geometry> 
             <cylinder length="0.04" radius="0.05" />
         </geometry>
         <material name="blue"/>
     </visual>
+    <collision>
+        <origin xyz="0 0.175 0" rpy="-${pi/2} 0 0"/>
+        <geometry>
+            <cylinder length="0.04" radius="0.05" />
+        </geometry>
+    </collision>
 </link>
 
 <!-- RIGHT WHEEL-->
-
 <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
+    
     <origin xyz="0 -0.175 0" rpy="${pi/2} 0 0"/>
     <axis xyz="0 0 -1"/>
 </joint>
@@ -66,26 +110,41 @@
 <link name="right_wheel">
     <visual>
         <geometry>
-            <cylinder length="0.04" radius="0.05" />
+            <cylinder length="${right_wheel_length}" radius="${right_wheel_radius}" />
         </geometry>
         <material name="blue"/>
     </visual>
+    <collision>
+    
+        <origin xyz="${right_wheel_origin_xyz}" rpy="${right_wheel_origin_rpy}"/>
+        <geometry>
+            <cylinder length="${right_wheel_length}" radius="${right_wheel_radius}" />
+        </geometry>
+    </collision>
 </link>
 
 <!-- CASTER WHEEL -->
 
+<xacro:property name="caster_wheel_radius" value="0.05"/>
 <joint name="caster_wheel_joint" type="fixed">
     <parent link="chassis"/>
     <child link="caster_wheel"/>
-    <origin xyz="0.24 0 0" rpy="0 0 0"/>
+    <origin xyz="${caster_wheel_origin_xyz}" rpy="${caster_wheel_origin_rpy}"/>
 </joint>
 
 <link name="caster_wheel">
     <visual>
-        <geometry>
-            <sphere radius="0.05" />
+        <geometry> 
+            <sphere radius="${caster_wheel_radius}"/>
         </geometry>
+        
         <material name="black"/>
     </visual>
+    <collision>   
+        <origin xyz="${caster_wheel_origin_xyz}" rpy="${caster_wheel_origin_rpy}"/>
+        <geometry>
+            <sphere radius="0.05"/>
+        </geometry>
+    </collision>
 </link>
 </robot>
